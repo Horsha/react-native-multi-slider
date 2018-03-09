@@ -3,7 +3,6 @@ const closest = (array, n) => array.findIndex((elem) => (n <= elem));
 
 export function valueToPosition(value, valuesArray, sliderLength) {
   const index = closest(valuesArray, value);
-
   const arrLength = valuesArray.length - 1;
   const validIndex = index === -1 ? arrLength : index;
 
@@ -11,16 +10,20 @@ export function valueToPosition(value, valuesArray, sliderLength) {
 }
 
 export function positionToValue(position, valuesArray, sliderLength) {
-  var arrLength;
-  var index;
+  const max = valuesArray.length - 1 
+  const min = 0
+  const positionPercent = 100 * position / sliderLength;
+  const minv = Math.log(1);
+  const maxv = Math.log(max);
 
-  if (position < 0 || sliderLength < position) {
-    return null;
-  } else {
-    arrLength = valuesArray.length - 1;
-    index = arrLength * position / sliderLength;
-    return valuesArray[Math.round(index)];
+  if (positionPercent === 0) {
+    return min;
+  } else if (positionPercent === 100) {
+    return max;
   }
+
+  const scale = (maxv - minv) / 100;
+  return Math.floor(Math.exp(minv + (scale * positionPercent))) || 0;
 }
 
 export function createArray(start, end, step) {
